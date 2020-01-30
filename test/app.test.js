@@ -4,39 +4,39 @@ const supertest = require("supertest");
 
 describe("GET /apps test", () => {
   // test for happy case
-  it("should get a 200 response", () => {
-    supertest(app)
-      .get("/app")
-      .expect(200);
+  it("should get a 400 response", () => {
+    return supertest(app)
+      .get("/apps")
+      .expect(400);
   });
 
   // test for query parameter
   it("should be a query parameter", () => {
-    supertest(app)
+    return supertest(app)
       .get("/apps")
       .query({ rating: 3,
          genres: "Puzzle" })
       .then(res => {
-        expect(res.body).to.include('"Genres": "Puzzle"');
+        expect(res.body[0].Genres).to.equal("Puzzle")
       });
   });
 
   // Validation test
   it("should sort by Rating", () => {
-    supertest(app)
-      .get("/app")
-      .query({ Rating: "number" })
-      .expect(200);
-    // .expect("Content", /json/)
-    // .then(res => {
-    //   expect(res.body).to.be.an("array");
-    //   let i = 0;
-    //   let sorted = true;
-    //   while (sorted && i < res.body.length - 1) {
-    //     sorted = sorted && res.body[i].Rating < res.body[i + 1].Rating;
-    //     i++;
-    //   }
-    //   expect(sorted).to.be.true;
-    // });
+    return supertest(app)
+      .get("/apps")
+      .query({ rating: 3,
+        genres: "Puzzle" })
+      .expect(200)
+    .then(res => {
+      expect(res.body[0].Rating).to.be.a("number");
+      // let i = 0;
+      // let sorted = true;
+      // while (sorted && i < res.body.length - 1) {
+      //   sorted = sorted && res.body[i].Rating < res.body[i + 1].Rating;
+      //   i++;
+      }
+      // expect(sorted).to.be.true;
+    );
   });
 });
